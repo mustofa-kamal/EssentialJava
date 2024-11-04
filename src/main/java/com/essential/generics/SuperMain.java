@@ -48,6 +48,8 @@ public class SuperMain {
         a.add(new Dog());
         a.add(new Puppy());
 
+
+
         Object retrievedObj1 = a.get(0);
         if (retrievedObj1 instanceof Dog) {
             Dog f = (Dog) retrievedObj1;
