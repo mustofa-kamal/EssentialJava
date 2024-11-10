@@ -63,19 +63,35 @@ public class AnonymousMain {
 
         consumer.accept("please print this");
 
-        Supplier<Double> supplier = ()->Math.random();
+        Supplier<Double> supplier = Math::random;
 
         supplier.get();
 
-        Function<String, String> trim=(s)->s.trim();
+        Function<String, String> trim=String::trim;
 
        // trim.apply("thsi s ");
 
-        Function<String, String > toLowerCase = (s)->s.toLowerCase();
+        Function<String, String > toLowerCase = String::toLowerCase;
 
         Function<String, String >  result = trim.andThen(toLowerCase);
 
         String sr = result.apply("  THIS IS A TEST  ");
+
+        Predicate<Integer> predicate = (x)-> x>10;
+
+        predicate.test(11);
+
+        BinaryOperator<Integer> add = (x, y)->x+y;
+
+        add.apply(4,4);
+
+        BinaryOperator<Integer> com = BinaryOperator.minBy(Integer::compare);
+
+        int res = com.apply(4,3);
+
+        int u = 0;
+
+
 
 
 
