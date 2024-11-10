@@ -2,7 +2,7 @@ package com.essential.functional.introduction;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 /*
@@ -21,6 +21,11 @@ interface Myinterface<T> {
 }
 
 public class AnonymousMain {
+
+
+    public static int getLength(String str){
+        return str.length();
+    }
 
     static void someFn(Myinterface<String> myinterface, String s){
         myinterface.getLength(s);
@@ -41,12 +46,36 @@ public class AnonymousMain {
 
         Myinterface<String> myinterfaceLamda = (s)-> s.length();
 
+
         myinterfaceLamda.getLength("This is test");
 
         someFn(myinterfaceLamda, "this is a testing");
 
+        Myinterface<String> myinterfaceLamda1 =AnonymousMain::getLength;
 
+        myinterfaceLamda1.getLength("ssfsff");
 
+        Myinterface<String> myinterfaceLamda2 =String::length;
+
+        myinterfaceLamda2.getLength("ssfsff");
+
+        Consumer<String> consumer = (s)->System.out.println(s);
+
+        consumer.accept("please print this");
+
+        Supplier<Double> supplier = ()->Math.random();
+
+        supplier.get();
+
+        Function<String, String> trim=(s)->s.trim();
+
+       // trim.apply("thsi s ");
+
+        Function<String, String > toLowerCase = (s)->s.toLowerCase();
+
+        Function<String, String >  result = trim.andThen(toLowerCase);
+
+        String sr = result.apply("  THIS IS A TEST  ");
 
 
 
