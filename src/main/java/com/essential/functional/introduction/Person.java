@@ -28,11 +28,6 @@ public final class Person {
     public List<String> getHobbies() { return hobbies; }
 
 
-
-
-
-
-
 }
 
 
