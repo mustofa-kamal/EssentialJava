@@ -51,13 +51,20 @@ public class StreamOperationsOnPerson {
 
         // Mapping persons to their names
         List<String> names = persons.stream()
+
+                .filter(person -> person.getAge() >= 30)
+
                 .map(Person::getName)
+
                 .collect(Collectors.toList());
 
         System.out.println("\nNames of all persons:");
         names.forEach(System.out::println);
 
 
+       // The operations are applied sequentially as per the code
+        // Stream API manages the iteration and calls the provided lambda expressions
+        //each line create
 
 
 
@@ -65,9 +72,52 @@ public class StreamOperationsOnPerson {
 
     }
 
-    public static void intermediateStreamOperations(List<Person> persons) {
 
-    }
+
+        public static void intermediateStreamOperations(List<Person> persons) {
+
+
+          Comparator<Person> comparator= (o1,o2)-> o1.getAge()-o2.getAge();
+
+
+            List<Person> sortedByAge = persons.stream()
+                    .sorted(Comparator.comparingInt(Person::getAge))
+                    .collect(Collectors.toList());
+
+            System.out.println("\nPersons sorted by age:");
+            sortedByAge.forEach(person -> System.out.println(person.getName() + " - " + person.getAge()));
+
+
+
+
+
+
+
+            // Getting the top 3 youngest persons
+            List<Person> top3Youngest = persons.stream()
+                    .sorted(Comparator.comparingInt(Person::getAge))
+                    .limit(3)
+                    .collect(Collectors.toList());
+
+            System.out.println("\nTop 3 youngest persons:");
+            top3Youngest.forEach(person -> System.out.println(person.getName() + " - " + person.getAge()));
+
+
+            // Finding unique hobbies
+            List<String> uniqueHobbies = persons.stream()
+                    .flatMap(person -> person.getHobbies().stream())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            System.out.println("\nUnique hobbies:");
+            uniqueHobbies.forEach(System.out::println);
+
+
+
+        }
+
+
+
 
     public static void advancedStreamOperations(List<Person> persons) {
 
