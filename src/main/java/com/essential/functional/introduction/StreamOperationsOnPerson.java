@@ -21,17 +21,17 @@ public class StreamOperationsOnPerson {
 
     public static void main(String[] args) {
         List<Person> persons = Arrays.asList(
-                new Person("Alice", 30, Arrays.asList("Reading", "Hiking")),
-                new Person("Bob", 25, Arrays.asList("Cycling", "Gaming")),
-                new Person("Charlie", 35, Arrays.asList("Cooking", "Traveling")),
-                new Person("Diana", 28, Arrays.asList("Running", "Swimming")),
-                new Person("Eve", 40, Arrays.asList("Gardening", "Reading")),
-                new Person("Frank", 22, Arrays.asList("Gaming", "Music")),
-                new Person("Grace", 27, Arrays.asList("Hiking", "Photography"))
+                new Person("Alice", 30, "Female", Arrays.asList("Reading", "Hiking")),
+                new Person("Bob", 25, "Male", Arrays.asList("Cycling", "Gaming")),
+                new Person("Charlie", 35,"Female", Arrays.asList("Cooking", "Traveling")),
+                new Person("Diana", 28, "Male", Arrays.asList("Running", "Swimming")),
+                new Person("Eve", 40, "Female" ,Arrays.asList("Gardening", "Reading")),
+                new Person("Frank", 22, "Male", Arrays.asList("Gaming", "Music")),
+                new Person("Grace", 27, "Female", Arrays.asList("Hiking", "Photography"))
         );
 
-        basicStreamOperations(persons);
-        intermediateStreamOperations(persons);
+        //basicStreamOperations(persons);
+        //intermediateStreamOperations(persons);
         advancedStreamOperations(persons);
     }
 
@@ -120,7 +120,118 @@ public class StreamOperationsOnPerson {
 
 
     public static void advancedStreamOperations(List<Person> persons) {
+        /*
+        .collect(
+                Collectors.groupingBy(
+                        // Classifier function
+                        // Downstream collector
+                )
+        )
+    */
+
+        persons.stream().collect(Collectors.groupingBy(person->person.getGender(),
+                Collectors.mapping(Person::getName, Collectors.toList())));
+
+
+       /* System.out.println("\nPersons grouped by gender group:");
+        re.forEach((x, y) -> {
+            System.out.println(x + ":");
+            y.forEach(k -> System.out.println(" - " +k ));
+        });*/
+
+
+
+       Map<String, List<Person>> groupByAge = persons.stream()
+                .collect(Collectors.groupingBy(person -> {
+                    int age = person.getAge();
+                    if (age >= 20 && age < 30) return "20s";
+                    else if (age >= 30 && age < 40) return "30s";
+                    else if (age >= 40 && age < 50) return "40s";
+                    else return "Other";
+                }));
+
+        System.out.println("\nPersons grouped by age group:");
+        groupByAge.forEach((ageGroup, groupPersons) -> {
+            System.out.println(ageGroup + ":");
+            groupPersons.forEach(person -> System.out.println(" - " + person.getName()));
+        });
+
+         Map<String, Map<String, List<Person>>> groupByAgeByGender = persons.stream()
+                .collect(Collectors.groupingBy(person -> {
+                    int age = person.getAge();
+                    if (age >= 20 && age < 30) return "20s";
+                    else if (age >= 30 && age < 40) return "30s";
+                    else if (age >= 40 && age < 50) return "40s";
+                    else return "Other";
+                }, Collectors.groupingBy(x->x.getGender())));
+
+        groupByAgeByGender.forEach((ageGroup, genderMap) -> {
+            System.out.println("Age Group: " + ageGroup);
+            genderMap.forEach((gender, people) -> {
+                System.out.println("  Gender: " + gender);
+                for (Person person : people) {
+                    System.out.println("    - Name: " + person.getName() + ", Age: " + person.getAge());
+                }
+            });
+        });
+
+
+
+
+        Map<String, Long> countByAgeGroup = persons.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                person -> { int age = person.getAge();
+                                    if (age >= 20 && age < 30) return "20s";
+                                    else if (age >= 30 && age < 40) return "30s";
+                                    else if (age >= 40 && age < 50) return "40s";
+                                    else return "Other"; },
+                                Collectors.counting()
+                        )
+                );
+
+                System.out.println("\nPersons grouped by age group and count:");
+                countByAgeGroup.forEach((x, y) -> {
+                    System.out.println(x + ":"+ y);
+
+                });
+
+
+
+
+
+
+
+        Map<String, List<String>> groupByAgeName = persons.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                person -> { int age = person.getAge();
+                                    if (age >= 20 && age < 30) return "20s";
+                                    else if (age >= 30 && age < 40) return "30s";
+                                    else if (age >= 40 && age < 50) return "40s";
+                                    else return "Other"; },
+                                Collectors.mapping(Person::getName, Collectors.toList())
+                        )
+                );
+
+
+
+        System.out.println("\nPersons grouped by age group and count:");
+        groupByAgeName.forEach((x, y) -> {
+            System.out.println(x + ":"+ y);
+
+        });
+
+
+
+
+
+
+
 
     }
-}
+
+
+
+    }
 
