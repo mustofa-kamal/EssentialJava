@@ -10,9 +10,9 @@ import static java.util.Optional.ofNullable;
 
 /*
 
---Optional is designed to represent the presence or absence of a single value, not for use inside collections.
+--Optional is designed to represent the presence or absence of a single value, not collection, not array.
 --A List already represents a collection of elements that may include null values.
---Adding Optional on top of this creates redundancy and complexity.
+
 
  */
 
@@ -61,19 +61,19 @@ class Address {
 public class OptionalMain {
 
     public static void main(String[] args) {
-        Optional<String> empty = Optional.empty();
 
-        Optional<String> optionalNullable = Optional.ofNullable(null);
-        Optional<String> first = List.of("aa","bb").stream().findFirst();
-        Optional<String> result = methodReturningOptional();
+        Object o = null;
+
+        Optional<String> empty = Optional.empty();
         Optional<String> optionalValue = Optional.of("value");
-        Optional<Integer> length = optionalValue.map(String::length);
+        Optional<Object> optionalNullable = Optional.ofNullable(o);
+
+
 
         // Avoids using optional in fields
         // Avoid using Optional as method parameter.
         // Avoid using Optional in collection
 
-        // Get method not recommanded
 
 
 
@@ -81,16 +81,29 @@ public class OptionalMain {
 
 
 
+          User user2 = findUserByIdNoWrap(1);
+
+          System.out.println(user2.getName());
 
 
 
-       // 8 use case
+
 
         Optional<User> userOptional = findUserById(1);
-        userOptional.ifPresentOrElse(
-                user -> System.out.println("User found: " + user.getName()),
-                () -> System.out.println("User not found")
-        );
+        //User user1 = userOptional.orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        User user1 = userOptional.orElseGet(() -> new User(-1,"Dummy User", null));
+
+        System.out.println(user1.getName());
+
+
+
+
+
+        //System.out.println(user);
+
+
+
 
 
         // Use Case 2: Wrapping Null-Safe Chains
@@ -99,6 +112,7 @@ public class OptionalMain {
 
         //The use of Optional ensures that I don’t encounter a NullPointerException
         // while navigating through nested objects like User → Address → streetName.
+        // Important: orElse Acts as a Terminal Operator
 
         String streetName = Optional.ofNullable(user)
                 .flatMap(u -> Optional.ofNullable(u.getAddress()))// If Address is null, directly execute  orElse
@@ -107,17 +121,21 @@ public class OptionalMain {
 
         System.out.println("Street Name: " + streetName);
 
-        // Use Case 3: Transforming Data with map
-        Optional<String> userName = Optional.of("John Doe");
-        String upperName = userName.map(String::toUpperCase).orElse("Default Name");// same idea optional is empty, directly execute orEles
-        System.out.println("Upper Case Name: " + upperName);
-
-        // Use Case 4: Chaining Optional Logic with flatMap
+        // Use Case 3: Chaining Optional Logic with flatMap
         //Optional.ofNullable(u.getAddress()) => returns optional so I need flatmap instead of map
         Optional<String> optionalStreetName = Optional.of(user)
                 .flatMap(u -> Optional.ofNullable(u.getAddress()))
                 .map(Address::getStreetName);
         System.out.println("FlatMapped Street Name: " + optionalStreetName.orElse("No Address"));
+
+
+
+        // Use Case 4: using map
+        Optional<String> userName = Optional.of("John Doe");
+        String upperName = userName.map(String::toUpperCase).
+                orElse("Default Name");// same idea optional is empty, directly execute orEles
+        System.out.println("Upper Case Name: " + upperName);
+
 
         // Use Case 5: Providing Default Values with orElse and orElseGet
         Optional<String> emptyOptional = Optional.empty();
@@ -131,20 +149,25 @@ public class OptionalMain {
         System.out.println("Config Value: " + configValue);
 
         // Use Case 7: Stream Integration
-        Optional<String> firstNameStartingWithJ = List.of("Alice", "Bob", "John")
-                .stream()
-                .filter(name -> name.startsWith("J"))
+        List<String> tempString = List.of("Alice", "Bob", "John");
+
+        Optional<String> firstNameStartingWithJ = tempString.stream()
+                .filter(name -> name.startsWith("K"))
                 .findFirst();
+
         System.out.println("First Name Starting With J: " + firstNameStartingWithJ.orElse("No Match"));
 
         // Use Case 8: Avoiding Exceptions
         Optional<User> userById = findUserById(2);
 
         userById.ifPresentOrElse(
-                user2 -> System.out.println("User found: " + user2.getName()),
+                user3 -> System.out.println("User found: " + user3.getName()),
                 () -> System.out.println("User with ID 2 not found")
         );
     }
+
+
+
 
     // Use Case 1 Helper
     public static Optional<User> findUserById(int id) {
@@ -153,6 +176,15 @@ public class OptionalMain {
         }
         return Optional.empty();
     }
+
+
+    public static User findUserByIdNoWrap(int id) {
+        if (id == 1) {
+            return new User(1, "John Doe", new Address("123 Main St"));
+        }
+        return null;
+    }
+
 
 
 
