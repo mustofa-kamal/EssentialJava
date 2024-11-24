@@ -90,7 +90,7 @@ public class OptionalMain {
 
 
         Optional<User> userOptional = findUserById(1);
-        //User user1 = userOptional.orElseThrow(() -> new IllegalArgumentException("User not found"));
+       // User user1 = userOptional.orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         User user1 = userOptional.orElseGet(() -> new User(-1,"Dummy User", null));
 
