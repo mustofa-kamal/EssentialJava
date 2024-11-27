@@ -21,6 +21,8 @@ public class DataOrientedOrderSystem {
             System.out.println("Placing order 1...");
             Order order1 = orderService.placeOrder("Alice", "Laptop", 2);
             System.out.println("Order placed: " + order1);
+            printInventoryForProduct(orderService, "Laptop");
+
 
             System.out.println("Placing order 2...");
             Order order2 = orderService.placeOrder("Bob", "Phone", 1);
@@ -41,5 +43,10 @@ public class DataOrientedOrderSystem {
         // Display current inventory
         System.out.println("\nCurrent Inventory:");
         orderService.getAllInventory().forEach(System.out::println);
+    }
+
+    private static void printInventoryForProduct(OrderService orderService, String productName) {
+        Inventory inventory = orderService.getInventoryForProduct(productName);
+        System.out.println("Updated Inventory for " + productName + ": " + inventory);
     }
 }

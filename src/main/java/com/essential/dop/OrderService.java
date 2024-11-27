@@ -30,8 +30,8 @@ public class OrderService {
             throw new IllegalArgumentException("Product not available in inventory: " + productName);
         }
 
-        Inventory updatedInventory = currentInventory.createWithReducedStock(quantity);
-        inventoryMap.put(productName, updatedInventory); // Replace old inventory with the updated one
+        Inventory newInventory = currentInventory.createWithReducedStock(quantity);
+        inventoryMap.put(productName, newInventory); // Replace old inventory with the new one
 
         Order order = new Order(customerName, productName, quantity);
         orders.add(order);
@@ -46,4 +46,8 @@ public class OrderService {
     public List<Inventory> getAllInventory() {
         return List.copyOf(inventoryMap.values()); // Return an immutable copy of inventory values
     }
+    public Inventory getInventoryForProduct(String productName) {
+        return inventoryMap.get(productName);
+    }
+
 }
