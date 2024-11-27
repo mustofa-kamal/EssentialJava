@@ -1,12 +1,12 @@
 package com.essential.dop;
 
-public record Inventory(String productName, int stock) {
+public record StockItem(String productName, int stock) {
 
-    public Inventory createWithReducedStock(int quantity) {
+    public StockItem createWithReducedStock(int quantity) {
         if (quantity > stock) {
             throw new IllegalArgumentException("Insufficient stock for product: " + productName);
         }
-        return new Inventory(productName, stock - quantity); // Returns a new immutable instance
+        return new StockItem(productName, stock - quantity); // Returns a new immutable instance
     }
 
     @Override

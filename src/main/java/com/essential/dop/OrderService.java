@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.*;
-
 public class OrderService {
-    private final Map<String, Inventory> inventoryMap = new HashMap<>();
+    private final Map<String, StockItem> inventoryMap = new HashMap<>();
     private final List<Order> orders = new ArrayList<>();
 
     public OrderService() {
@@ -17,21 +15,21 @@ public class OrderService {
 
     public void initInventory() {
         // Initialize inventory with sample data
-        inventoryMap.put("Laptop", new Inventory("Laptop", 10));
-        inventoryMap.put("Phone", new Inventory("Phone", 20));
-        inventoryMap.put("Mouse", new Inventory("Mouse", 50));
-        inventoryMap.put("Keyboard", new Inventory("Keyboard", 15));
-        inventoryMap.put("Monitor", new Inventory("Monitor", 8));
+        inventoryMap.put("Laptop", new StockItem("Laptop", 10));
+        inventoryMap.put("Phone", new StockItem("Phone", 20));
+        inventoryMap.put("Mouse", new StockItem("Mouse", 50));
+        inventoryMap.put("Keyboard", new StockItem("Keyboard", 15));
+        inventoryMap.put("Monitor", new StockItem("Monitor", 8));
     }
 
     public Order placeOrder(String customerName, String productName, int quantity) {
-        Inventory currentInventory = inventoryMap.get(productName);
-        if (currentInventory == null) {
+        StockItem currentStockItem = inventoryMap.get(productName);
+        if (currentStockItem == null) {
             throw new IllegalArgumentException("Product not available in inventory: " + productName);
         }
 
-        Inventory newInventory = currentInventory.createWithReducedStock(quantity);
-        inventoryMap.put(productName, newInventory); // Replace old inventory with the new one
+        StockItem newStockItem = currentStockItem.createWithReducedStock(quantity);
+        inventoryMap.put(productName, newStockItem); // Replace old inventory with the new one
 
         Order order = new Order(customerName, productName, quantity);
         orders.add(order);
@@ -42,11 +40,10 @@ public class OrderService {
     public List<Order> getAllOrders() {
         return List.copyOf(orders); // Return an immutable copy of orders
     }
-
-    public List<Inventory> getAllInventory() {
+    public List<StockItem> getAllInventory() {
         return List.copyOf(inventoryMap.values()); // Return an immutable copy of inventory values
     }
-    public Inventory getInventoryForProduct(String productName) {
+    public StockItem getInventoryForProduct(String productName) {
         return inventoryMap.get(productName);
     }
 

@@ -2,10 +2,10 @@ package com.essential.dop;
 
 
 /*
+--Data-Oriented Programming (DOP) in Java has gained popularity as a paradigm
+-- that emphasizeson immutable data structures, transformations, and stateless functions
  -- Records are immutable by default, enforcing a core principle of DOP
  -- Using records eliminates the need for explicit fields, constructors, toString, equals, and hashCode methods
- -- Order objects are immutable by default.
- -- The original data is never altered. Instead, transformations result in new, immutable objects
 
  */
 
@@ -18,8 +18,13 @@ public class DataOrientedOrderSystem {
 
         // Place orders
         try {
+
+            System.out.println("\nInitialize Inventory:");
+            orderService.getAllInventory().forEach(System.out::println);
+
+
             System.out.println("Placing order 1...");
-            Order order1 = orderService.placeOrder("Alice", "Laptop", 2);
+            Order order1 = orderService.placeOrder("Alice", "Laptop", 1);
             System.out.println("Order placed: " + order1);
             printInventoryForProduct(orderService, "Laptop");
 
@@ -27,10 +32,12 @@ public class DataOrientedOrderSystem {
             System.out.println("Placing order 2...");
             Order order2 = orderService.placeOrder("Bob", "Phone", 1);
             System.out.println("Order placed: " + order2);
+            printInventoryForProduct(orderService, "Phone");
 
             System.out.println("Placing order 3...");
             Order order3 = orderService.placeOrder("Alice", "Mouse", 5);
             System.out.println("Order placed: " + order3);
+            printInventoryForProduct(orderService, "Mouse");
 
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
@@ -46,7 +53,7 @@ public class DataOrientedOrderSystem {
     }
 
     private static void printInventoryForProduct(OrderService orderService, String productName) {
-        Inventory inventory = orderService.getInventoryForProduct(productName);
-        System.out.println("Updated Inventory for " + productName + ": " + inventory);
+        StockItem stockItem = orderService.getInventoryForProduct(productName);
+        System.out.println("Updated Inventory for " + productName + ": " + stockItem);
     }
 }
